@@ -35,22 +35,14 @@
         }
 
         @media (pointer: fine) {
-            * {
-                cursor: none;
-            }
-            #cursor {
-                display: block;
-            }
+            * { cursor: none; }
+            #cursor { display: block; }
         }
 
         @media (pointer: coarse) {
-            #cursor {
-                display: none !important;
-            }
-            body {
-                cursor: auto;
-            }
-            .grid-item, .link-item, .main-title, .counter-item {
+            #cursor { display: none !important; }
+            body { cursor: auto; }
+            .grid-item, .link-item, .main-title {
                 cursor: pointer;
                 -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
             }
@@ -73,9 +65,7 @@
             transition: opacity 0.2s ease;
         }
 
-        body.is-pressed::after {
-            opacity: 1;
-        }
+        body.is-pressed::after { opacity: 1; }
 
         #cursor {
             position: fixed;
@@ -113,9 +103,7 @@
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        body.is-pressed .container {
-            transform: scale(0.98);
-        }
+        body.is-pressed .container { transform: scale(0.98); }
 
         .title-wrapper {
             display: inline-block;
@@ -133,19 +121,9 @@
             position: relative;
             display: inline-block;
             transition: text-shadow 0.2s ease;
-            word-break: keep-all;
         }
 
-        @media (pointer: coarse) {
-            .main-title:active {
-                text-shadow: 3px 0px 0px var(--accent-red), -3px 0px 0px var(--accent-cyan);
-                animation: glitch-shake 0.15s infinite;
-            }
-        }
-
-        .main-title:hover {
-            text-shadow: 3px 0px 0px var(--glow-red), -3px 0px 0px var(--glow-cyan);
-        }
+        .main-title:hover { text-shadow: 3px 0px 0px var(--glow-red), -3px 0px 0px var(--glow-cyan); }
 
         body.is-pressed .main-title {
             animation: glitch-shake 0.2s infinite;
@@ -154,28 +132,7 @@
 
         .q-mark {
             display: inline-block;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease, text-shadow 0.2s ease;
-        }
-
-        @media (pointer: fine) {
-            .main-title:hover .q-mark:nth-child(1) {
-                transform: translateY(-12px) rotate(15deg);
-                color: var(--accent-red);
-                text-shadow: 0 0 10px var(--accent-red);
-            }
-            .main-title:hover .q-mark:nth-child(2) {
-                transform: translateY(-8px) rotate(-10deg);
-                color: var(--accent-cyan);
-                text-shadow: 0 0 10px var(--accent-cyan);
-                transition-delay: 0.05s;
-            }
-        }
-
-        @media (pointer: coarse) {
-            .q-mark:active {
-                transform: translateY(-6px) scale(1.1);
-                color: var(--accent-red);
-            }
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease;
         }
 
         .grid {
@@ -187,13 +144,13 @@
             margin-top: 0.5rem;
         }
 
-        .grid-item, .counter-item {
+        .grid-item {
             position: relative;
             transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
             padding: 0.25rem 0;
         }
 
-        .grid-item::before, .counter-item::before {
+        .grid-item::before {
             content: '';
             position: absolute;
             left: -1.2rem;
@@ -206,36 +163,12 @@
             transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        @media (pointer: coarse) {
-            .grid-item:active, .counter-item:active {
-                transform: translateX(1rem);
-            }
-            .grid-item:active::before, .counter-item:active::before {
-                transform: scaleY(1);
-            }
-            .grid-item:active .content-text, .counter-item:active .counter-value {
-                color: var(--fg);
-            }
-            .grid-item:active .section-label::after, .counter-item:active .section-label::after {
-                animation: blink 1s step-end infinite;
-                background: var(--fg);
-            }
+        .grid-item:hover, .grid-item:active {
+            transform: translateX(1.5rem);
         }
 
-        @media (pointer: fine) {
-            .grid-item:hover, .counter-item:hover {
-                transform: translateX(1.5rem);
-            }
-            .grid-item:hover::before, .counter-item:hover::before {
-                transform: scaleY(1);
-            }
-            .grid-item:hover .content-text, .counter-item:hover .counter-value {
-                color: var(--fg);
-            }
-            .grid-item:hover .section-label::after, .counter-item:hover .section-label::after {
-                animation: blink 1s step-end infinite;
-                background: var(--fg);
-            }
+        .grid-item:hover::before, .grid-item:active::before {
+            transform: scaleY(1);
         }
 
         .section-label {
@@ -249,15 +182,6 @@
             gap: 10px;
         }
 
-        .section-label::after {
-            content: '';
-            display: inline-block;
-            width: 6px;
-            height: 12px;
-            background: #555;
-            opacity: 0;
-        }
-
         .content-text {
             font-size: 1.1rem;
             font-weight: 300;
@@ -266,18 +190,16 @@
             transition: color 0.4s ease;
         }
 
-        .counter-value {
-            font-size: 1.1rem;
-            font-weight: 300;
+        .grid-item:hover .content-text, .grid-item:active .content-text { color: var(--fg); }
+
+        #visit-counter {
             font-family: monospace;
-            letter-spacing: 2px;
-            color: #888;
-            transition: color 0.4s ease;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 8px var(--glow-cyan);
+            font-weight: bold;
         }
 
-        .links {
-            margin-top: 4rem;
-        }
+        .links { margin-top: 4rem; }
 
         .link-item {
             display: inline-block;
@@ -292,30 +214,12 @@
         .link-item::after {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
+            bottom: 0; left: 0; width: 0; height: 2px;
             background: var(--fg);
             transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        @media (pointer: fine) {
-            .link-item:hover::after {
-                width: 100%;
-            }
-        }
-
-        @media (pointer: coarse) {
-            .link-item:active::after {
-                width: 100%;
-            }
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
+        .link-item:hover::after, .link-item:active::after { width: 100%; }
 
         @keyframes glitch-shake {
             0% { transform: translate(2px, 1px); }
@@ -327,34 +231,7 @@
         }
 
         @media (max-width: 600px) {
-            .grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-            .container {
-                padding: 0.5rem;
-            }
-            .links {
-                margin-top: 3rem;
-            }
-            .link-item {
-                font-size: 1.3rem;
-            }
-            .section-label {
-                font-size: 0.65rem;
-            }
-            .content-text, .counter-value {
-                font-size: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 1rem;
-            }
-            .grid-item::before, .counter-item::before {
-                left: -0.8rem;
-            }
+            .grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -377,9 +254,9 @@
                 <p class="section-label">Philosophy</p>
                 <p class="content-text">System is a cage. Code is the key. Questions are the only way out.</p>
             </div>
-            <div class="counter-item">
-                <p class="section-label">Visitors</p>
-                <p class="counter-value" id="counterDisplay">0000</p>
+            <div class="grid-item">
+                <p class="section-label">Global Access</p>
+                <p class="content-text">Entries detected: <span id="visit-counter">CONNECTING...</span></p>
             </div>
         </main>
 
@@ -396,17 +273,15 @@
             if (!isTouch) {
                 document.addEventListener('mousedown', () => document.body.classList.add('is-pressed'));
                 document.addEventListener('mouseup', () => document.body.classList.remove('is-pressed'));
-                document.addEventListener('mouseleave', () => document.body.classList.remove('is-pressed'));
-
                 document.addEventListener('mousemove', (e) => {
                     cursor.style.left = e.clientX + 'px';
                     cursor.style.top = e.clientY + 'px';
                 });
 
-                const targets = document.querySelectorAll('a, .main-title, .grid-item, .counter-item');
+                const targets = document.querySelectorAll('a, .main-title, .grid-item');
                 targets.forEach(target => {
                     target.addEventListener('mouseenter', () => {
-                        if (target.classList.contains('grid-item') || target.classList.contains('counter-item') || target.classList.contains('link-item')) {
+                        if (target.classList.contains('grid-item') || target.classList.contains('link-item')) {
                             cursor.classList.add('hacker-mode');
                         } else {
                             cursor.style.transform = 'scale(4)';
@@ -417,154 +292,51 @@
                         cursor.style.transform = 'scale(1)';
                     });
                 });
-            } else {
-                document.body.addEventListener('touchstart', (e) => {
-                    document.body.classList.add('is-pressed');
-                    setTimeout(() => {
-                        document.body.classList.remove('is-pressed');
-                    }, 120);
-                });
-                document.body.addEventListener('touchend', () => {
-                    document.body.classList.remove('is-pressed');
-                });
             }
 
             const titleWrapper = document.querySelector('.title-wrapper');
-            if (!isTouch) {
-                document.addEventListener('mousemove', (e) => {
-                    const x = (window.innerWidth / 2 - e.clientX) / 60;
-                    const y = (window.innerHeight / 2 - e.clientY) / 60;
-                    titleWrapper.style.transform = `translate(${x}px, ${y}px)`;
-                });
-            } else {
-                let touchX = 0, touchY = 0;
-                document.body.addEventListener('touchmove', (e) => {
-                    if (e.touches.length) {
-                        touchX = (window.innerWidth / 2 - e.touches[0].clientX) / 60;
-                        touchY = (window.innerHeight / 2 - e.touches[0].clientY) / 60;
-                        titleWrapper.style.transform = `translate(${touchX}px, ${touchY}px)`;
-                    }
-                });
-                document.body.addEventListener('touchend', () => {
-                    titleWrapper.style.transform = `translate(0px, 0px)`;
-                });
-            }
+            document.addEventListener(isTouch ? 'touchmove' : 'mousemove', (e) => {
+                const clientX = isTouch ? e.touches[0].clientX : e.clientX;
+                const clientY = isTouch ? e.touches[0].clientY : e.clientY;
+                const x = (window.innerWidth / 2 - clientX) / 60;
+                const y = (window.innerHeight / 2 - clientY) / 60;
+                titleWrapper.style.transform = `translate(${x}px, ${y}px)`;
+            });
 
             const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
-            const linkItem = document.querySelector('.link-item');
-            
             const runHackerEffect = (target) => {
                 let iterations = 0;
                 const originalText = target.dataset.value;
-                if (!originalText) return;
-                
                 clearInterval(target.interval);
-                
                 target.interval = setInterval(() => {
-                    target.innerText = originalText
-                        .split("")
-                        .map((letter, index) => {
-                            if(index < iterations) {
-                                return originalText[index];
-                            }
-                            return letters[Math.floor(Math.random() * letters.length)];
-                        })
-                        .join("");
-                    
-                    if(iterations >= originalText.length){ 
-                        clearInterval(target.interval);
-                        target.innerText = originalText;
-                    }
-                    
+                    target.innerText = originalText.split("").map((letter, index) => {
+                        if(index < iterations) return originalText[index];
+                        return letters[Math.floor(Math.random() * letters.length)];
+                    }).join("");
+                    if(iterations >= originalText.length) clearInterval(target.interval);
                     iterations += 1 / 3;
                 }, 30);
             };
-            
+
+            const linkItem = document.querySelector('.link-item');
             if (linkItem) {
-                if (!isTouch) {
-                    linkItem.addEventListener('mouseenter', (e) => {
-                        runHackerEffect(e.currentTarget);
-                    });
-                } else {
-                    linkItem.addEventListener('touchstart', (e) => {
-                        e.preventDefault();
-                        runHackerEffect(e.currentTarget);
-                        setTimeout(() => {
-                            window.location.href = linkItem.getAttribute('href');
-                        }, 200);
-                    });
-                }
+                linkItem.addEventListener(isTouch ? 'touchstart' : 'mouseenter', (e) => runHackerEffect(e.currentTarget));
             }
 
-            const gridItems = document.querySelectorAll('.grid-item');
-            if (isTouch) {
-                gridItems.forEach(item => {
-                    item.addEventListener('touchstart', (e) => {
-                        item.classList.add('touch-active');
-                    });
-                    item.addEventListener('touchend', () => {
-                        setTimeout(() => {
-                            item.classList.remove('touch-active');
-                        }, 150);
-                    });
-                });
-            }
-
-            // ========== НАДЁЖНЫЙ СЧЁТЧИК ПОСЕЩЕНИЙ ==========
-            (function() {
-                const COUNTER_KEY = 'gifted_visits_v2';
-                const counterDisplay = document.getElementById('counterDisplay');
-                
-                if (!counterDisplay) return;
-                
+            async function initCounter() {
+                const counterEl = document.getElementById('visit-counter');
+                const namespace = "gifted_cyber_entry_v2"; 
                 try {
-                    let currentVisits = 0;
-                    let stored = localStorage.getItem(COUNTER_KEY);
-                    
-                    if (stored === null) {
-                        currentVisits = 1;
-                    } else {
-                        currentVisits = parseInt(stored, 10);
-                        if (isNaN(currentVisits) || currentVisits < 0) currentVisits = 1;
+                    const response = await fetch(`https://api.counterapi.dev/v1/${namespace}/global/up`);
+                    const data = await response.json();
+                    if (data.count) {
+                        counterEl.innerText = data.count.toString().padStart(6, '0');
                     }
-                    
-                    const sessionKey = 'gifted_session_v2_' + window.location.pathname;
-                    const alreadyCounted = sessionStorage.getItem(sessionKey);
-                    
-                    if (!alreadyCounted) {
-                        currentVisits = currentVisits + 1;
-                        localStorage.setItem(COUNTER_KEY, currentVisits);
-                        sessionStorage.setItem(sessionKey, 'true');
-                    }
-                    
-                    const formatted = currentVisits.toString().padStart(4, '0').slice(0, 6);
-                    counterDisplay.textContent = formatted;
-                    
-                    if (!alreadyCounted) {
-                        counterDisplay.style.transition = 'color 0.2s';
-                        counterDisplay.style.color = '#00f0ff';
-                        setTimeout(() => {
-                            counterDisplay.style.color = '#888';
-                        }, 300);
-                    }
-                } catch(e) {
-                    counterDisplay.textContent = '0001';
-                    console.warn('Counter error:', e);
+                } catch (e) {
+                    counterEl.innerText = "OFFLINE";
                 }
-            })();
-            // ==============================================
-            
-            const counterItem = document.querySelector('.counter-item');
-            if (counterItem && !isTouch) {
-                counterItem.addEventListener('mouseenter', () => {
-                    if (counterDisplay) {
-                        counterDisplay.style.opacity = '0.7';
-                        setTimeout(() => {
-                            if (counterDisplay) counterDisplay.style.opacity = '1';
-                        }, 200);
-                    }
-                });
             }
+            initCounter();
         })();
     </script>
 </body>
