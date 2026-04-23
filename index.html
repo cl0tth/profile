@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>gifted??</title>
+    <title>gifted?? — Backend & Cyber</title>
     <style>
         * {
             margin: 0;
@@ -272,13 +272,7 @@
             font-family: monospace;
             letter-spacing: 2px;
             color: #888;
-            transition: color 0.4s ease, text-shadow 0.2s ease;
-        }
-
-        .counter-digit {
-            display: inline-block;
-            min-width: 0.8em;
-            text-align: center;
+            transition: color 0.4s ease;
         }
 
         .links {
@@ -330,12 +324,6 @@
             60% { transform: translate(-2px, 2px); }
             80% { transform: translate(2px, -2px); }
             100% { transform: translate(1px, 2px); }
-        }
-
-        @keyframes digitGlitch {
-            0% { text-shadow: -2px 0 var(--accent-red), 2px 0 var(--accent-cyan); opacity: 0.8; }
-            50% { text-shadow: 2px 0 var(--accent-red), -2px 0 var(--accent-cyan); opacity: 1; }
-            100% { text-shadow: 0 0 var(--accent-red), 0 0 var(--accent-cyan); opacity: 1; }
         }
 
         @media (max-width: 600px) {
@@ -522,111 +510,57 @@
                 });
             }
 
-            const COUNTER_KEY = 'gifted_visits';
-            const counterDisplay = document.getElementById('counterDisplay');
-            
-            const formatCount = (num) => {
-                return num.toString().padStart(4, '0').slice(0, 6);
-            };
-            
-            const animateCounterWithGlitch = (element, start, end, duration = 700) => {
-                const startTime = performance.now();
-                const updateCounter = (currentTime) => {
-                    const elapsed = currentTime - startTime;
-                    const progress = Math.min(1, elapsed / duration);
-                    const easeOutCubic = 1 - Math.pow(1 - progress, 3);
-                    const currentValue = Math.floor(start + (end - start) * easeOutCubic);
-                    element.textContent = formatCount(currentValue);
-                    
-                    if (progress < 0.3) {
-                        element.style.animation = 'digitGlitch 0.08s infinite';
-                    } else if (progress < 0.7) {
-                        element.style.animation = 'digitGlitch 0.05s infinite';
-                    } else {
-                        element.style.animation = '';
-                    }
-                    
-                    if (progress < 1) {
-                        requestAnimationFrame(updateCounter);
-                    } else {
-                        element.textContent = formatCount(end);
-                        element.style.animation = '';
-                        element.style.color = 'var(--fg)';
-                        element.style.textShadow = `0 0 8px var(--glow-cyan)`;
-                        setTimeout(() => {
-                            element.style.textShadow = '';
-                        }, 400);
-                    }
-                };
-                requestAnimationFrame(updateCounter);
-            };
-            
-            const getVisitCount = () => {
-                try {
-                    const stored = localStorage.getItem(COUNTER_KEY);
-                    if (stored === null) {
-                        return 1;
-                    }
-                    const parsed = parseInt(stored, 10);
-                    return isNaN(parsed) ? 1 : parsed;
-                } catch (e) {
-                    return 1;
-                }
-            };
-            
-            const incrementVisit = () => {
-                try {
-                    let current = getVisitCount();
-                    const isNewSession = !sessionStorage.getItem('gifted_session_counted');
-                    
-                    if (isNewSession) {
-                        current += 1;
-                        localStorage.setItem(COUNTER_KEY, current.toString());
-                        sessionStorage.setItem('gifted_session_counted', 'true');
-                        return current;
-                    } else {
-                        return current;
-                    }
-                } catch (e) {
-                    return 1;
-                }
-            };
-            
-            const initCounter = () => {
-                const newCount = incrementVisit();
-                const oldCount = getVisitCount() - (sessionStorage.getItem('gifted_session_counted') === 'true' ? 1 : 0);
-                const displayOld = oldCount > 0 ? oldCount : 1;
+            // ========== НАДЁЖНЫЙ СЧЁТЧИК ПОСЕЩЕНИЙ ==========
+            (function() {
+                const COUNTER_KEY = 'gifted_visits_v2';
+                const counterDisplay = document.getElementById('counterDisplay');
                 
-                if (counterDisplay) {
-                    counterDisplay.textContent = formatCount(displayOld);
-                    setTimeout(() => {
-                        animateCounterWithGlitch(counterDisplay, displayOld, newCount, 650);
-                    }, 100);
+                if (!counterDisplay) return;
+                
+                try {
+                    let currentVisits = 0;
+                    let stored = localStorage.getItem(COUNTER_KEY);
+                    
+                    if (stored === null) {
+                        currentVisits = 1;
+                    } else {
+                        currentVisits = parseInt(stored, 10);
+                        if (isNaN(currentVisits) || currentVisits < 0) currentVisits = 1;
+                    }
+                    
+                    const sessionKey = 'gifted_session_v2_' + window.location.pathname;
+                    const alreadyCounted = sessionStorage.getItem(sessionKey);
+                    
+                    if (!alreadyCounted) {
+                        currentVisits = currentVisits + 1;
+                        localStorage.setItem(COUNTER_KEY, currentVisits);
+                        sessionStorage.setItem(sessionKey, 'true');
+                    }
+                    
+                    const formatted = currentVisits.toString().padStart(4, '0').slice(0, 6);
+                    counterDisplay.textContent = formatted;
+                    
+                    if (!alreadyCounted) {
+                        counterDisplay.style.transition = 'color 0.2s';
+                        counterDisplay.style.color = '#00f0ff';
+                        setTimeout(() => {
+                            counterDisplay.style.color = '#888';
+                        }, 300);
+                    }
+                } catch(e) {
+                    counterDisplay.textContent = '0001';
+                    console.warn('Counter error:', e);
                 }
-            };
-            
-            initCounter();
+            })();
+            // ==============================================
             
             const counterItem = document.querySelector('.counter-item');
             if (counterItem && !isTouch) {
                 counterItem.addEventListener('mouseenter', () => {
                     if (counterDisplay) {
-                        const currentVal = parseInt(counterDisplay.textContent, 10);
-                        counterDisplay.style.animation = 'digitGlitch 0.1s infinite';
+                        counterDisplay.style.opacity = '0.7';
                         setTimeout(() => {
-                            if (counterDisplay) counterDisplay.style.animation = '';
-                        }, 300);
-                    }
-                });
-            }
-            
-            if (counterItem && isTouch) {
-                counterItem.addEventListener('touchstart', () => {
-                    if (counterDisplay) {
-                        counterDisplay.style.transform = 'scale(1.05)';
-                        counterDisplay.style.animation = 'digitGlitch 0.08s 2';
-                        setTimeout(() => {
-                            if (counterDisplay) counterDisplay.style.transform = '';
+                            if (counterDisplay) counterDisplay.style.opacity = '1';
                         }, 200);
                     }
                 });
