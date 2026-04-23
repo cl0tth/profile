@@ -326,30 +326,29 @@
             async function initCounter() {
                 const counterEl = document.getElementById('visit-counter');
                 
-                // Твои настройки
-                const apiKey = "ut_SPzYU9ewT690411Zke4T38mNAv2lwVFL8xExKXHM";
-                const workspace = "cl0tth"; 
-                const counterName = "main_site_visits";
-                const url = `https://api.counterapi.dev/v2/${workspace}/${counterName}/up`;
+                // Твой ключ (НЕ СВЕТИ ЕГО НИГДЕ, КРОМЕ СВОЕГО РЕПО!)
+                const apiKey = "ut_SPzYU9ewT690411Zke4T38mNAv2lwVFL8xExKXHM"; 
+                
+                // Твои эндпоинты из доки
+                const url = "https://api.counterapi.dev/v2/cl0tth/cl0tth/up";
             
                 try {
                     const response = await fetch(url, {
-                        method: 'GET',
+                        method: 'GET', // Или 'POST', если дока просит POST для up
                         headers: {
-                            'Accept': 'application/json',
-                            'X-API-Key': apiKey 
+                            'Authorization': `Bearer ${apiKey}`,
+                            'Accept': 'application/json'
                         }
                     });
             
-                    if (!response.ok) {
-                        throw new Error(`API Status: ${response.status}`);
-                    }
-            
+                    if (!response.ok) throw new Error(`Status: ${response.status}`);
+                    
                     const data = await response.json();
-                    counterEl.innerText = data.value.toString().padStart(6, '0');
+                    // В доке обычно { value: ... }
+                    counterEl.innerText = (data.value || 0).toString().padStart(6, '0');
                 } catch (e) {
                     console.error("Counter Auth Error:", e);
-                    counterEl.innerText = "AUTH_ERR";
+                    counterEl.innerText = "AUTH_FAIL";
                 }
             }
             initCounter();
