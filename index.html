@@ -35,21 +35,13 @@
         }
 
         @media (pointer: fine) {
-            * {
-                cursor: none;
-            }
-            #cursor {
-                display: block;
-            }
+            * { cursor: none; }
+            #cursor { display: block; }
         }
 
         @media (pointer: coarse) {
-            #cursor {
-                display: none !important;
-            }
-            body {
-                cursor: auto;
-            }
+            #cursor { display: none !important; }
+            body { cursor: auto; }
             .grid-item, .link-item, .main-title {
                 cursor: pointer;
                 -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
@@ -73,9 +65,7 @@
             transition: opacity 0.2s ease;
         }
 
-        body.is-pressed::after {
-            opacity: 1;
-        }
+        body.is-pressed::after { opacity: 1; }
 
         #cursor {
             position: fixed;
@@ -113,9 +103,7 @@
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        body.is-pressed .container {
-            transform: scale(0.98);
-        }
+        body.is-pressed .container { transform: scale(0.98); }
 
         .title-wrapper {
             display: inline-block;
@@ -133,19 +121,9 @@
             position: relative;
             display: inline-block;
             transition: text-shadow 0.2s ease;
-            word-break: keep-all;
         }
 
-        @media (pointer: coarse) {
-            .main-title:active {
-                text-shadow: 3px 0px 0px var(--accent-red), -3px 0px 0px var(--accent-cyan);
-                animation: glitch-shake 0.15s infinite;
-            }
-        }
-
-        .main-title:hover {
-            text-shadow: 3px 0px 0px var(--glow-red), -3px 0px 0px var(--glow-cyan);
-        }
+        .main-title:hover { text-shadow: 3px 0px 0px var(--glow-red), -3px 0px 0px var(--glow-cyan); }
 
         body.is-pressed .main-title {
             animation: glitch-shake 0.2s infinite;
@@ -154,28 +132,7 @@
 
         .q-mark {
             display: inline-block;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease, text-shadow 0.2s ease;
-        }
-
-        @media (pointer: fine) {
-            .main-title:hover .q-mark:nth-child(1) {
-                transform: translateY(-12px) rotate(15deg);
-                color: var(--accent-red);
-                text-shadow: 0 0 10px var(--accent-red);
-            }
-            .main-title:hover .q-mark:nth-child(2) {
-                transform: translateY(-8px) rotate(-10deg);
-                color: var(--accent-cyan);
-                text-shadow: 0 0 10px var(--accent-cyan);
-                transition-delay: 0.05s;
-            }
-        }
-
-        @media (pointer: coarse) {
-            .q-mark:active {
-                transform: translateY(-6px) scale(1.1);
-                color: var(--accent-red);
-            }
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease;
         }
 
         .grid {
@@ -206,36 +163,12 @@
             transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        @media (pointer: coarse) {
-            .grid-item:active {
-                transform: translateX(1rem);
-            }
-            .grid-item:active::before {
-                transform: scaleY(1);
-            }
-            .grid-item:active .content-text {
-                color: var(--fg);
-            }
-            .grid-item:active .section-label::after {
-                animation: blink 1s step-end infinite;
-                background: var(--fg);
-            }
+        .grid-item:hover, .grid-item:active {
+            transform: translateX(1.5rem);
         }
 
-        @media (pointer: fine) {
-            .grid-item:hover {
-                transform: translateX(1.5rem);
-            }
-            .grid-item:hover::before {
-                transform: scaleY(1);
-            }
-            .grid-item:hover .content-text {
-                color: var(--fg);
-            }
-            .grid-item:hover .section-label::after {
-                animation: blink 1s step-end infinite;
-                background: var(--fg);
-            }
+        .grid-item:hover::before, .grid-item:active::before {
+            transform: scaleY(1);
         }
 
         .section-label {
@@ -249,15 +182,6 @@
             gap: 10px;
         }
 
-        .section-label::after {
-            content: '';
-            display: inline-block;
-            width: 6px;
-            height: 12px;
-            background: #555;
-            opacity: 0;
-        }
-
         .content-text {
             font-size: 1.1rem;
             font-weight: 300;
@@ -266,9 +190,9 @@
             transition: color 0.4s ease;
         }
 
-        .links {
-            margin-top: 4rem;
-        }
+        .grid-item:hover .content-text, .grid-item:active .content-text { color: var(--fg); }
+
+        .links { margin-top: 4rem; }
 
         .link-item {
             display: inline-block;
@@ -283,30 +207,12 @@
         .link-item::after {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
+            bottom: 0; left: 0; width: 0; height: 2px;
             background: var(--fg);
             transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        @media (pointer: fine) {
-            .link-item:hover::after {
-                width: 100%;
-            }
-        }
-
-        @media (pointer: coarse) {
-            .link-item:active::after {
-                width: 100%;
-            }
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
+        .link-item:hover::after, .link-item:active::after { width: 100%; }
 
         @keyframes glitch-shake {
             0% { transform: translate(2px, 1px); }
@@ -318,34 +224,7 @@
         }
 
         @media (max-width: 600px) {
-            .grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-            .container {
-                padding: 0.5rem;
-            }
-            .links {
-                margin-top: 3rem;
-            }
-            .link-item {
-                font-size: 1.3rem;
-            }
-            .section-label {
-                font-size: 0.65rem;
-            }
-            .content-text {
-                font-size: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 1rem;
-            }
-            .grid-item::before {
-                left: -0.8rem;
-            }
+            .grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -368,6 +247,14 @@
                 <p class="section-label">Philosophy</p>
                 <p class="content-text">System is a cage. Code is the key. Questions are the only way out.</p>
             </div>
+            <div class="grid-item">
+                <p class="section-label">Global Access</p>
+                <a href="https://www.hitwebcounter.com/" target="_blank">
+                    <img src="https://hitwebcounter.com/counter/counter.php?page=21491909&style=0024&nbdigits=5&type=page&initCount=0" 
+                         title="hitwebcounter" alt="hitwebcounter" 
+                         style="border:0; filter: invert(1) hue-rotate(180deg) brightness(1.5);">
+                </a>
+            </div>
         </main>
 
         <footer class="links">
@@ -383,8 +270,6 @@
             if (!isTouch) {
                 document.addEventListener('mousedown', () => document.body.classList.add('is-pressed'));
                 document.addEventListener('mouseup', () => document.body.classList.remove('is-pressed'));
-                document.addEventListener('mouseleave', () => document.body.classList.remove('is-pressed'));
-
                 document.addEventListener('mousemove', (e) => {
                     cursor.style.left = e.clientX + 'px';
                     cursor.style.top = e.clientY + 'px';
@@ -404,97 +289,35 @@
                         cursor.style.transform = 'scale(1)';
                     });
                 });
-            } else {
-                document.body.addEventListener('touchstart', (e) => {
-                    document.body.classList.add('is-pressed');
-                    setTimeout(() => {
-                        document.body.classList.remove('is-pressed');
-                    }, 120);
-                });
-                document.body.addEventListener('touchend', () => {
-                    document.body.classList.remove('is-pressed');
-                });
             }
 
             const titleWrapper = document.querySelector('.title-wrapper');
-            if (!isTouch) {
-                document.addEventListener('mousemove', (e) => {
-                    const x = (window.innerWidth / 2 - e.clientX) / 60;
-                    const y = (window.innerHeight / 2 - e.clientY) / 60;
-                    titleWrapper.style.transform = `translate(${x}px, ${y}px)`;
-                });
-            } else {
-                let touchX = 0, touchY = 0;
-                document.body.addEventListener('touchmove', (e) => {
-                    if (e.touches.length) {
-                        touchX = (window.innerWidth / 2 - e.touches[0].clientX) / 60;
-                        touchY = (window.innerHeight / 2 - e.touches[0].clientY) / 60;
-                        titleWrapper.style.transform = `translate(${touchX}px, ${touchY}px)`;
-                    }
-                });
-                document.body.addEventListener('touchend', () => {
-                    titleWrapper.style.transform = `translate(0px, 0px)`;
-                });
-            }
+            document.addEventListener(isTouch ? 'touchmove' : 'mousemove', (e) => {
+                const clientX = isTouch ? e.touches[0].clientX : e.clientX;
+                const clientY = isTouch ? e.touches[0].clientY : e.clientY;
+                const x = (window.innerWidth / 2 - clientX) / 60;
+                const y = (window.innerHeight / 2 - clientY) / 60;
+                titleWrapper.style.transform = `translate(${x}px, ${y}px)`;
+            });
 
             const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
-            const linkItem = document.querySelector('.link-item');
-            
             const runHackerEffect = (target) => {
                 let iterations = 0;
                 const originalText = target.dataset.value;
-                if (!originalText) return;
-                
                 clearInterval(target.interval);
-                
                 target.interval = setInterval(() => {
-                    target.innerText = originalText
-                        .split("")
-                        .map((letter, index) => {
-                            if(index < iterations) {
-                                return originalText[index];
-                            }
-                            return letters[Math.floor(Math.random() * letters.length)];
-                        })
-                        .join("");
-                    
-                    if(iterations >= originalText.length){ 
-                        clearInterval(target.interval);
-                        target.innerText = originalText;
-                    }
-                    
+                    target.innerText = originalText.split("").map((letter, index) => {
+                        if(index < iterations) return originalText[index];
+                        return letters[Math.floor(Math.random() * letters.length)];
+                    }).join("");
+                    if(iterations >= originalText.length) clearInterval(target.interval);
                     iterations += 1 / 3;
                 }, 30);
             };
-            
-            if (linkItem) {
-                if (!isTouch) {
-                    linkItem.addEventListener('mouseenter', (e) => {
-                        runHackerEffect(e.currentTarget);
-                    });
-                } else {
-                    linkItem.addEventListener('touchstart', (e) => {
-                        e.preventDefault();
-                        runHackerEffect(e.currentTarget);
-                        setTimeout(() => {
-                            window.location.href = linkItem.getAttribute('href');
-                        }, 200);
-                    });
-                }
-            }
 
-            const gridItems = document.querySelectorAll('.grid-item');
-            if (isTouch) {
-                gridItems.forEach(item => {
-                    item.addEventListener('touchstart', (e) => {
-                        item.classList.add('touch-active');
-                    });
-                    item.addEventListener('touchend', () => {
-                        setTimeout(() => {
-                            item.classList.remove('touch-active');
-                        }, 150);
-                    });
-                });
+            const linkItem = document.querySelector('.link-item');
+            if (linkItem) {
+                linkItem.addEventListener(isTouch ? 'touchstart' : 'mouseenter', (e) => runHackerEffect(e.currentTarget));
             }
         })();
     </script>
