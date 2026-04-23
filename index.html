@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>gifted??</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
             --bg: #000000;
@@ -34,198 +30,58 @@
             padding: 1.5rem;
         }
 
-        @media (pointer: fine) {
-            * { cursor: none; }
-            #cursor { display: block; }
+        /* Счетчик: по умолчанию темный, при наведении — яркий */
+        .counter-img {
+            border: 0;
+            vertical-align: middle;
+            transition: filter 0.3s ease;
+            filter: brightness(0.3) contrast(1.2);
         }
 
-        @media (pointer: coarse) {
-            #cursor { display: none !important; }
-            body { cursor: auto; }
-            .grid-item, .link-item, .main-title {
-                cursor: pointer;
-                -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
-            }
+        .grid-item:hover .counter-img {
+            filter: invert(1) hue-rotate(180deg) brightness(1.5);
         }
+
+        /* Остальные стили */
+        @media (pointer: fine) { * { cursor: none; } #cursor { display: block; } }
+        @media (pointer: coarse) { #cursor { display: none !important; } body { cursor: auto; } }
 
         body::after {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(255, 255, 255, 0.04),
-                rgba(255, 255, 255, 0.04) 1px,
-                transparent 1px,
-                transparent 3px
-            );
-            pointer-events: none;
-            z-index: 998;
-            opacity: 0;
-            transition: opacity 0.2s ease;
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.04) 1px, transparent 1px, transparent 3px);
+            pointer-events: none; z-index: 998; opacity: 0; transition: opacity 0.2s ease;
         }
-
         body.is-pressed::after { opacity: 1; }
 
         #cursor {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            background: var(--fg);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: difference;
+            position: fixed; width: 20px; height: 20px; background: var(--fg); border-radius: 50%;
+            pointer-events: none; z-index: 9999; mix-blend-mode: difference;
             transition: transform 0.15s ease-out, border-radius 0.3s ease, background 0.2s ease;
-            will-change: left, top;
         }
 
-        #cursor.hacker-mode {
-            border-radius: 2px;
-            transform: scale(2.5) !important;
-        }
+        #cursor.hacker-mode { border-radius: 2px; transform: scale(2.5) !important; }
+        body.is-pressed #cursor { transform: scale(0.3) !important; background: var(--accent-red); border-radius: 0; mix-blend-mode: normal; box-shadow: 0 0 15px 5px var(--glow-red); }
 
-        body.is-pressed #cursor {
-            transform: scale(0.3) !important;
-            background: var(--accent-red);
-            border-radius: 0;
-            mix-blend-mode: normal;
-            box-shadow: 0 0 15px 5px var(--glow-red);
-        }
-
-        .container {
-            width: 100%;
-            max-width: 820px;
-            margin: 0 auto;
-            padding: 1rem 0.5rem;
-            position: relative;
-            z-index: 2;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
+        .container { width: 100%; max-width: 820px; margin: 0 auto; padding: 1rem 0.5rem; position: relative; z-index: 2; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         body.is-pressed .container { transform: scale(0.98); }
 
-        .title-wrapper {
-            display: inline-block;
-            margin-bottom: 1rem;
-            transition: transform 0.2s ease-out;
-            will-change: transform;
-        }
-
-        .main-title {
-            font-size: clamp(3.2rem, 12vw, 6rem);
-            font-weight: 900;
-            letter-spacing: -0.05em;
-            line-height: 0.9;
-            margin-bottom: 2rem;
-            position: relative;
-            display: inline-block;
-            transition: text-shadow 0.2s ease;
-        }
-
+        .title-wrapper { display: inline-block; margin-bottom: 1rem; transition: transform 0.2s ease-out; will-change: transform; }
+        .main-title { font-size: clamp(3.2rem, 12vw, 6rem); font-weight: 900; letter-spacing: -0.05em; line-height: 0.9; margin-bottom: 2rem; position: relative; }
         .main-title:hover { text-shadow: 3px 0px 0px var(--glow-red), -3px 0px 0px var(--glow-cyan); }
 
-        body.is-pressed .main-title {
-            animation: glitch-shake 0.2s infinite;
-            text-shadow: 5px 0px 0px var(--accent-red), -5px 0px 0px var(--accent-cyan);
-        }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; border-top: 1px solid #222; padding-top: 2rem; margin-top: 0.5rem; }
+        .grid-item { position: relative; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); padding: 0.25rem 0; }
+        .grid-item::before { content: ''; position: absolute; left: -1.2rem; top: 0; height: 100%; width: 2px; background: var(--fg); transform: scaleY(0); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .grid-item:hover { transform: translateX(1.5rem); }
+        .grid-item:hover::before { transform: scaleY(1); }
 
-        .q-mark {
-            display: inline-block;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease;
-        }
+        .section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.3em; color: #555; margin-bottom: 1rem; }
+        .content-text { font-size: 1.1rem; color: #888; transition: color 0.4s ease; }
+        .grid-item:hover .content-text { color: var(--fg); }
 
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
-            border-top: 1px solid #222;
-            padding-top: 2rem;
-            margin-top: 0.5rem;
-        }
-
-        .grid-item {
-            position: relative;
-            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-            padding: 0.25rem 0;
-        }
-
-        .grid-item::before {
-            content: '';
-            position: absolute;
-            left: -1.2rem;
-            top: 0;
-            height: 100%;
-            width: 2px;
-            background: var(--fg);
-            transform: scaleY(0);
-            transform-origin: top;
-            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .grid-item:hover, .grid-item:active {
-            transform: translateX(1.5rem);
-        }
-
-        .grid-item:hover::before, .grid-item:active::before {
-            transform: scaleY(1);
-        }
-
-        .section-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            color: #555;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .content-text {
-            font-size: 1.1rem;
-            font-weight: 300;
-            line-height: 1.6;
-            color: #888;
-            transition: color 0.4s ease;
-        }
-
-        .grid-item:hover .content-text, .grid-item:active .content-text { color: var(--fg); }
-
-        .links { margin-top: 4rem; }
-
-        .link-item {
-            display: inline-block;
-            font-size: 1.5rem;
-            text-decoration: none;
-            color: var(--fg);
-            position: relative;
-            padding-bottom: 5px;
-            font-family: monospace;
-        }
-
-        .link-item::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0; width: 0; height: 2px;
-            background: var(--fg);
-            transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .link-item:hover::after, .link-item:active::after { width: 100%; }
-
-        @keyframes glitch-shake {
-            0% { transform: translate(2px, 1px); }
-            20% { transform: translate(-2px, -2px); }
-            40% { transform: translate(1px, -1px); }
-            60% { transform: translate(-2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(1px, 2px); }
-        }
-
-        @media (max-width: 600px) {
-            .grid { grid-template-columns: 1fr; }
-        }
+        .link-item { display: inline-block; font-size: 1.5rem; color: var(--fg); text-decoration: none; font-family: monospace; }
+        
+        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -233,31 +89,24 @@
 
     <div class="container">
         <header class="title-wrapper">
-            <h1 class="main-title">
-                gifted<span class="q-mark">?</span><span class="q-mark">?</span>
-            </h1>
+            <h1 class="main-title">gifted<span class="q-mark">?</span><span class="q-mark">?</span></h1>
         </header>
 
         <main class="grid">
             <div class="grid-item">
                 <p class="section-label">Identity</p>
-                <p class="content-text">Backend Development & Cybersecurity. Driven by logic, obsessed with the "why".</p>
-            </div>
-            <div class="grid-item">
-                <p class="section-label">Philosophy</p>
-                <p class="content-text">System is a cage. Code is the key. Questions are the only way out.</p>
+                <p class="content-text">Backend Development & Cyber. Obsessed with the logic.</p>
             </div>
             <div class="grid-item">
                 <p class="section-label">Global Access</p>
                 <a href="https://www.hitwebcounter.com/" target="_blank">
                     <img src="https://hitwebcounter.com/counter/counter.php?page=21491909&style=0024&nbdigits=5&type=page&initCount=0" 
-                         title="hitwebcounter" alt="hitwebcounter" 
-                         style="border:0; filter: invert(1) hue-rotate(180deg) brightness(1.5);">
+                         title="hitwebcounter" alt="hitwebcounter" class="counter-img">
                 </a>
             </div>
         </main>
 
-        <footer class="links">
+        <footer style="margin-top: 4rem;">
             <a href="https://t.me/g1ftted" class="link-item" data-value="contact_me">contact_me</a>
         </footer>
     </div>
