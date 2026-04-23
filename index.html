@@ -50,7 +50,7 @@
             body {
                 cursor: auto;
             }
-            .grid-item, .link-item, .main-title {
+            .grid-item, .link-item, .main-title, .counter-item {
                 cursor: pointer;
                 -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
             }
@@ -187,13 +187,13 @@
             margin-top: 0.5rem;
         }
 
-        .grid-item {
+        .grid-item, .counter-item {
             position: relative;
             transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
             padding: 0.25rem 0;
         }
 
-        .grid-item::before {
+        .grid-item::before, .counter-item::before {
             content: '';
             position: absolute;
             left: -1.2rem;
@@ -207,32 +207,32 @@
         }
 
         @media (pointer: coarse) {
-            .grid-item:active {
+            .grid-item:active, .counter-item:active {
                 transform: translateX(1rem);
             }
-            .grid-item:active::before {
+            .grid-item:active::before, .counter-item:active::before {
                 transform: scaleY(1);
             }
-            .grid-item:active .content-text {
+            .grid-item:active .content-text, .counter-item:active .counter-value {
                 color: var(--fg);
             }
-            .grid-item:active .section-label::after {
+            .grid-item:active .section-label::after, .counter-item:active .section-label::after {
                 animation: blink 1s step-end infinite;
                 background: var(--fg);
             }
         }
 
         @media (pointer: fine) {
-            .grid-item:hover {
+            .grid-item:hover, .counter-item:hover {
                 transform: translateX(1.5rem);
             }
-            .grid-item:hover::before {
+            .grid-item:hover::before, .counter-item:hover::before {
                 transform: scaleY(1);
             }
-            .grid-item:hover .content-text {
+            .grid-item:hover .content-text, .counter-item:hover .counter-value {
                 color: var(--fg);
             }
-            .grid-item:hover .section-label::after {
+            .grid-item:hover .section-label::after, .counter-item:hover .section-label::after {
                 animation: blink 1s step-end infinite;
                 background: var(--fg);
             }
@@ -264,6 +264,21 @@
             line-height: 1.6;
             color: #888;
             transition: color 0.4s ease;
+        }
+
+        .counter-value {
+            font-size: 1.1rem;
+            font-weight: 300;
+            font-family: monospace;
+            letter-spacing: 2px;
+            color: #888;
+            transition: color 0.4s ease, text-shadow 0.2s ease;
+        }
+
+        .counter-digit {
+            display: inline-block;
+            min-width: 0.8em;
+            text-align: center;
         }
 
         .links {
@@ -317,6 +332,12 @@
             100% { transform: translate(1px, 2px); }
         }
 
+        @keyframes digitGlitch {
+            0% { text-shadow: -2px 0 var(--accent-red), 2px 0 var(--accent-cyan); opacity: 0.8; }
+            50% { text-shadow: 2px 0 var(--accent-red), -2px 0 var(--accent-cyan); opacity: 1; }
+            100% { text-shadow: 0 0 var(--accent-red), 0 0 var(--accent-cyan); opacity: 1; }
+        }
+
         @media (max-width: 600px) {
             .grid {
                 grid-template-columns: 1fr;
@@ -334,7 +355,7 @@
             .section-label {
                 font-size: 0.65rem;
             }
-            .content-text {
+            .content-text, .counter-value {
                 font-size: 1rem;
             }
         }
@@ -343,7 +364,7 @@
             body {
                 padding: 1rem;
             }
-            .grid-item::before {
+            .grid-item::before, .counter-item::before {
                 left: -0.8rem;
             }
         }
@@ -368,6 +389,10 @@
                 <p class="section-label">Philosophy</p>
                 <p class="content-text">System is a cage. Code is the key. Questions are the only way out.</p>
             </div>
+            <div class="counter-item">
+                <p class="section-label">Visitors</p>
+                <p class="counter-value" id="counterDisplay">0000</p>
+            </div>
         </main>
 
         <footer class="links">
@@ -390,10 +415,10 @@
                     cursor.style.top = e.clientY + 'px';
                 });
 
-                const targets = document.querySelectorAll('a, .main-title, .grid-item');
+                const targets = document.querySelectorAll('a, .main-title, .grid-item, .counter-item');
                 targets.forEach(target => {
                     target.addEventListener('mouseenter', () => {
-                        if (target.classList.contains('grid-item') || target.classList.contains('link-item')) {
+                        if (target.classList.contains('grid-item') || target.classList.contains('counter-item') || target.classList.contains('link-item')) {
                             cursor.classList.add('hacker-mode');
                         } else {
                             cursor.style.transform = 'scale(4)';
@@ -494,6 +519,116 @@
                             item.classList.remove('touch-active');
                         }, 150);
                     });
+                });
+            }
+
+            const COUNTER_KEY = 'gifted_visits';
+            const counterDisplay = document.getElementById('counterDisplay');
+            
+            const formatCount = (num) => {
+                return num.toString().padStart(4, '0').slice(0, 6);
+            };
+            
+            const animateCounterWithGlitch = (element, start, end, duration = 700) => {
+                const startTime = performance.now();
+                const updateCounter = (currentTime) => {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(1, elapsed / duration);
+                    const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+                    const currentValue = Math.floor(start + (end - start) * easeOutCubic);
+                    element.textContent = formatCount(currentValue);
+                    
+                    if (progress < 0.3) {
+                        element.style.animation = 'digitGlitch 0.08s infinite';
+                    } else if (progress < 0.7) {
+                        element.style.animation = 'digitGlitch 0.05s infinite';
+                    } else {
+                        element.style.animation = '';
+                    }
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        element.textContent = formatCount(end);
+                        element.style.animation = '';
+                        element.style.color = 'var(--fg)';
+                        element.style.textShadow = `0 0 8px var(--glow-cyan)`;
+                        setTimeout(() => {
+                            element.style.textShadow = '';
+                        }, 400);
+                    }
+                };
+                requestAnimationFrame(updateCounter);
+            };
+            
+            const getVisitCount = () => {
+                try {
+                    const stored = localStorage.getItem(COUNTER_KEY);
+                    if (stored === null) {
+                        return 1;
+                    }
+                    const parsed = parseInt(stored, 10);
+                    return isNaN(parsed) ? 1 : parsed;
+                } catch (e) {
+                    return 1;
+                }
+            };
+            
+            const incrementVisit = () => {
+                try {
+                    let current = getVisitCount();
+                    const isNewSession = !sessionStorage.getItem('gifted_session_counted');
+                    
+                    if (isNewSession) {
+                        current += 1;
+                        localStorage.setItem(COUNTER_KEY, current.toString());
+                        sessionStorage.setItem('gifted_session_counted', 'true');
+                        return current;
+                    } else {
+                        return current;
+                    }
+                } catch (e) {
+                    return 1;
+                }
+            };
+            
+            const initCounter = () => {
+                const newCount = incrementVisit();
+                const oldCount = getVisitCount() - (sessionStorage.getItem('gifted_session_counted') === 'true' ? 1 : 0);
+                const displayOld = oldCount > 0 ? oldCount : 1;
+                
+                if (counterDisplay) {
+                    counterDisplay.textContent = formatCount(displayOld);
+                    setTimeout(() => {
+                        animateCounterWithGlitch(counterDisplay, displayOld, newCount, 650);
+                    }, 100);
+                }
+            };
+            
+            initCounter();
+            
+            const counterItem = document.querySelector('.counter-item');
+            if (counterItem && !isTouch) {
+                counterItem.addEventListener('mouseenter', () => {
+                    if (counterDisplay) {
+                        const currentVal = parseInt(counterDisplay.textContent, 10);
+                        counterDisplay.style.animation = 'digitGlitch 0.1s infinite';
+                        setTimeout(() => {
+                            if (counterDisplay) counterDisplay.style.animation = '';
+                        }, 300);
+                    }
+                });
+            }
+            
+            if (counterItem && isTouch) {
+                counterItem.addEventListener('touchstart', () => {
+                    if (counterDisplay) {
+                        counterDisplay.style.transform = 'scale(1.05)';
+                        counterDisplay.style.animation = 'digitGlitch 0.08s 2';
+                        setTimeout(() => {
+                            if (counterDisplay) counterDisplay.style.transform = '';
+                        }, 200);
+                    }
                 });
             }
         })();
