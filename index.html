@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>gifted?? — Backend & Cyber</title>
+    <title>gifted??</title>
     <style>
         * {
             margin: 0;
@@ -325,25 +325,31 @@
 
             async function initCounter() {
                 const counterEl = document.getElementById('visit-counter');
-                // Уникальный ключ для твоего домена
-                const namespace = "cl0tth_ru"; 
-                const key = "visits_count";
+                
+                // Твои настройки
+                const apiKey = "ut_SPzYU9ewT690411Zke4T38mNAv2lwVFL8xExKXHM";
+                const workspace = "cl0tth"; 
+                const counterName = "main_site_visits";
+                const url = `https://api.counterapi.dev/v2/${workspace}/${counterName}/up`;
             
                 try {
-                    // Используем countapi.xyz - он сейчас самый адекватный
-                    const response = await fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`);
-                    
-                    if (!response.ok) throw new Error('API_DOWN');
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-API-Key': apiKey 
+                        }
+                    });
+            
+                    if (!response.ok) {
+                        throw new Error(`API Status: ${response.status}`);
+                    }
             
                     const data = await response.json();
-                    if (data.value) {
-                        // Форматируем число: 000123
-                        counterEl.innerText = data.value.toString().padStart(6, '0');
-                    }
+                    counterEl.innerText = data.value.toString().padStart(6, '0');
                 } catch (e) {
-                    // Если API подохнет, сайт напишет это (в стиле Cyber)
-                    counterEl.innerText = "OVERRIDE_001";
-                    console.error("Counter bypassed due to server error");
+                    console.error("Counter Auth Error:", e);
+                    counterEl.innerText = "AUTH_ERR";
                 }
             }
             initCounter();
