@@ -325,15 +325,25 @@
 
             async function initCounter() {
                 const counterEl = document.getElementById('visit-counter');
-                const namespace = "gifted_cyber_entry_v2"; 
+                // Уникальный ключ для твоего домена
+                const namespace = "cl0tth_ru"; 
+                const key = "visits_count";
+            
                 try {
-                    const response = await fetch(`https://api.counterapi.dev/v1/${namespace}/global/up`);
+                    // Используем countapi.xyz - он сейчас самый адекватный
+                    const response = await fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`);
+                    
+                    if (!response.ok) throw new Error('API_DOWN');
+            
                     const data = await response.json();
-                    if (data.count) {
-                        counterEl.innerText = data.count.toString().padStart(6, '0');
+                    if (data.value) {
+                        // Форматируем число: 000123
+                        counterEl.innerText = data.value.toString().padStart(6, '0');
                     }
                 } catch (e) {
-                    counterEl.innerText = "OFFLINE";
+                    // Если API подохнет, сайт напишет это (в стиле Cyber)
+                    counterEl.innerText = "OVERRIDE_001";
+                    console.error("Counter bypassed due to server error");
                 }
             }
             initCounter();
